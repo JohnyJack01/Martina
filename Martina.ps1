@@ -59,16 +59,17 @@ Function Set-InternetProxy
 $csv = Import-Csv D:\Martina\proxy.csv -Header @("IP","port")
 
 foreach ($item in $csv) {
-	Write-Output "$item.IP:$item.port"
-    
-#	Set-InternetProxy -proxy "$line.IP:$line.port"
+#	Write-Output "$($item.IP):$($item.port)"
+	
+	Set-InternetProxy -proxy "$($item.IP):$($item.port)"
 	
 	$ie = New-Object -ComObject 'internetExplorer.Application'
 	$ie.Visible= $true
 	$ie.Navigate("https://maminkaroku.maminka.cz/soutez/maminkaroku/2018/profil/255/martina")
 
 	while ($ie.Busy -eq $true){Start-Sleep -seconds 1;}  
-
+	
+	Start-Sleep -s 10
 } 
 
 #$token = $ie.Document.getElementById("tokenval")
