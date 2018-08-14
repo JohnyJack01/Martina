@@ -1,0 +1,45 @@
+<div class="captchaFields captcha-fields">
+        <input type="submit" value="Hlasovat" class="voteButton button" id="voteSend"/>
+        <div class="input-captcha">
+          <input type="text" id="captcha" name="captcha" maxlength="4" autocomplete="off"/>
+        </div>
+        <div class="captchaContainer image-captcha">
+          <img src="/captcha/e206c25268cbc2b4501638115ca7e2c5eb5600d3" id="captchaImg"/>
+        </div>
+      </div>
+      <div class="clear">
+        <!--#-->
+      </div>
+      <p id="captchaText" class="text-captcha">Opište text z obrázku do vedlejšího políčka.</p>
+      <input type="hidden" name="tokenval" id="tokenval" value="e206c25268cbc2b4501638115ca7e2c5eb5600d3"/>
+      <div class="clear">
+        <!--#-->
+      </div>
+    </form>
+    <script type="text/javascript">
+                                                $("#captcha").focus();
+                                                $("#vote").submit(function() {
+                                                    var captcha = false;
+                                                    $.ajax({
+                                                        async: false,
+                                                        type: "POST",
+                                                        url: '/soutez/maminkaroku/2018/captcha/',
+                                                        data: {check: "true", captcha: $("#captcha").val(), token: $("#tokenval").val()},
+                                                        dataType: "json",
+                                                        success: function(res) {
+                                                            if (res.status == "ok") {
+                                                                $(".input-captcha").removeClass('error');
+                                                                captcha = true;
+                                                            } else {
+                                                                $("#captchaText").html('<span class="error">Text a obrázek se neshodují, zkuste to prosím znovu.</span>');
+                                                                $(".input-captcha").addClass('error');
+                                                                $("#captchaImg").attr("src", "/captcha/"+res.captcha_token);
+                                                                $("#tokenval").val(res.captcha_token);
+                                                                $("#captcha").val("").focus();
+                                                            }
+                                                        }
+                                                    });
+                                                    return captcha;
+                                                });
+                                            </script>
+  </div>
